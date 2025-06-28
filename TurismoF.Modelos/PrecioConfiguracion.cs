@@ -16,7 +16,7 @@ namespace TurismoF.Modelos
         public decimal Descuento { get; set; } // % de descuento por promoción/categoría
 
         // FKs
-        public int RutaId { get; set; }
+        public int? RutaId { get; set; }
 
         // Navegadores
         public Ruta? Ruta { get; set; }

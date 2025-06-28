@@ -13,6 +13,9 @@ namespace TurismoF.Modelos
         public int Numero { get; set; }
         public TipoVagon TipoVagon { get; set; } // Preferencial/Economico
 
+        // Nueva lógica: Flag para identificar si es preferencial automáticamente
+        public bool EsPreferencial { get; set; }
+
         // FKs
         public int TrenId { get; set; }
 

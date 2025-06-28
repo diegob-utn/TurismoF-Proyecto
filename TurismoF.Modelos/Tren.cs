@@ -13,6 +13,10 @@ namespace TurismoF.Modelos
         public string Nombre { get; set; }
         public EstadoTren Estado { get; set; }
 
+        // Nueva lógica para generación automática de asientos
+        public int CantidadVagones { get; set; } // Total de vagones que tendrá el tren
+        public int CantidadAsientosPorVagon { get; set; } // Asientos por vagon (todos los vagones tendrán la misma cantidad)
+
         // FKs
         // (Ninguna)
 

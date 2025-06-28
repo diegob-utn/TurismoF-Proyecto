@@ -13,6 +13,9 @@ namespace TurismoF.Modelos
         public string Codigo { get; set; } // Ej: "A1"
         public TipoAsiento TipoAsiento { get; set; } // Preferencial/Economico
 
+        // Nueva lógica: Guarda el número del vagón para trazabilidad
+        public int NumeroVagon { get; set; }
+
         // FKs
         public int VagonId { get; set; }
 
