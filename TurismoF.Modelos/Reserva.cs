@@ -12,15 +12,15 @@ namespace TurismoF.Modelos
         public int Id { get; set; }
         public DateTime FechaReserva { get; set; }
         public EstadoReserva Estado { get; set; }
-        public int TotalBoletos { get; set; }
-        public decimal MontoTotal { get; set; }
-        public string ApplicationUserId { get; set; }
+
+        // FKs
+        public int ApplicationUserId { get; set; }
         public int ViajeId { get; set; }
 
-        // No necesarios para ingresar desde Swagger
-        public ApplicationUser ApplicationUser { get; set; }
-        public Viaje Viaje { get; set; }
-        public List<Boleto> Boletos { get; set; }
-        public List<Pago> Pagos { get; set; }
+        // Navegadores
+        public ApplicationUser? ApplicationUser { get; set; }
+        public Viaje? Viaje { get; set; }
+        public List<Boleto>? Boletos { get; set; }
+        public List<Pago>? Pagos { get; set; }
     }
 }

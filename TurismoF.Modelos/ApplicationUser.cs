@@ -6,15 +6,20 @@ using System.Threading.Tasks;
 
 namespace TurismoF.Modelos
 {
-    public class ApplicationUser:IdentityUser
+    public class ApplicationUser  // :IdentityUser  // integracion con Identity
     {
-        // Necesarios
-        public string? Nombre { get; set; }
-        public string? Apellido { get; set; }
-        public DateTime FechaRegistro { get; set; }
+        public int Id { get; set; }
 
-        // No necesarios para ingresar desde Swagger
-        public List<Reserva> Reservas { get; set; }
-        public List<Pago> Pagos { get; set; }
+        // Campos personalizados
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+
+        // Si quieres usar el campo PhoneNumber de IdentityUser, no necesitas redeclararlo.
+        // Si quieres lógica personalizada, puedes sobrescribirlo:
+        // public override string PhoneNumber { get; set; }
+
+        // Navegadores
+        public List<Reserva>? Reservas { get; set; }
+        public List<Pago>? Pagos { get; set; }
     }
 }

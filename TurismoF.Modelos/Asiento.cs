@@ -10,12 +10,14 @@ namespace TurismoF.Modelos
     {
         // Necesarios
         public int Id { get; set; }
-        public string Codigo { get; set; }
-        public TipoAsiento TipoAsiento { get; set; }
+        public string Codigo { get; set; } // Ej: "A1"
+        public TipoAsiento TipoAsiento { get; set; } // Preferencial/Economico
+
+        // FKs
         public int VagonId { get; set; }
 
-        // No necesarios para ingresar desde Swagger
-        public Vagon Vagon { get; set; }
-        public List<Boleto> Boletos { get; set; }
+        // Navegadores
+        public Vagon? Vagon { get; set; }
+        public List<Boleto>? Boletos { get; set; }
     }
 }

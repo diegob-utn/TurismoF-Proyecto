@@ -10,17 +10,20 @@ namespace TurismoF.Modelos
     {
         // Necesarios
         public int Id { get; set; }
+        public CategoriaPasajero Categoria { get; set; }
+        public TipoAsiento TipoAsiento { get; set; }
+        public decimal PrecioFinal { get; set; }
+        public DateTime FechaEmision { get; set; }
+        public EstadoBoleto Estado { get; set; }
+
+        // FKs
         public int ReservaId { get; set; }
         public int ViajeId { get; set; }
         public int AsientoId { get; set; }
-        public TipoAsiento TipoAsiento { get; set; }
-        public Categoria Categoria { get; set; }
-        public decimal PrecioFinal { get; set; }
-        public DateTime FechaEmision { get; set; }
 
-        // No necesarios para ingresar desde Swagger
-        public Reserva Reserva { get; set; }
-        public Viaje Viaje { get; set; }
-        public Asiento Asiento { get; set; }
+        // Navegadores
+        public Reserva? Reserva { get; set; }
+        public Viaje? Viaje { get; set; }
+        public Asiento? Asiento { get; set; }
     }
 }

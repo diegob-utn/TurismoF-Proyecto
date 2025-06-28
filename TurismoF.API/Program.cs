@@ -1,3 +1,7 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using TurismoF.API;
+using TurismoF.Data.Data;
 
 namespace TurismoF.API
 {
@@ -6,6 +10,8 @@ namespace TurismoF.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<Context1>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("Context") ?? throw new InvalidOperationException("Connection string 'Context' not found.")));
 
             // Add services to the container.
 

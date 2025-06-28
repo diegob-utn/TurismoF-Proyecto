@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace TurismoF.Modelos
 {
-    public enum Categoria
+    // Enums auxiliares
+
+    public enum CategoriaPasajero
     {
         Niño = 0,
         Adulto = 1,
@@ -33,7 +35,9 @@ namespace TurismoF.Modelos
 
     public enum EstadoPago
     {
-        Registrado = 0
+        Registrado = 0,
+        Realizado = 1,
+        Rechazado = 2
     }
 
     public enum EstadoViaje
@@ -47,5 +51,12 @@ namespace TurismoF.Modelos
     {
         Activo = 0,
         Inactivo = 1
+    }
+
+    public enum EstadoBoleto
+    {
+        Reservado = 0,
+        Emitido = 1,
+        Anulado = 2
     }
 }

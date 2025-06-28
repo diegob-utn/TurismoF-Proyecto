@@ -10,14 +10,15 @@ namespace TurismoF.Modelos
     {
         // Necesarios
         public int Id { get; set; }
-        public Categoria Categoria { get; set; }
+        public CategoriaPasajero Categoria { get; set; }
         public TipoAsiento TipoAsiento { get; set; }
-        public decimal FactorCategoria { get; set; }
-        public decimal FactorAsiento { get; set; }
-        public DateTime FechaVigencia { get; set; }
+        public decimal PrecioBase { get; set; }
+        public decimal Descuento { get; set; } // % de descuento por promoción/categoría
+
+        // FKs
         public int RutaId { get; set; }
 
-        // No necesarios para ingresar desde Swagger
-        public Ruta Ruta { get; set; }
+        // Navegadores
+        public Ruta? Ruta { get; set; }
     }
 }

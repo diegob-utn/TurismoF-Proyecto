@@ -12,12 +12,14 @@ namespace TurismoF.Modelos
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
-        public decimal PrecioBase { get; set; }
-        public string Color { get; set; }
-        public string Coordenadas { get; set; }
+        public string ColorMapa { get; set; }
+        public string Coordenadas { get; set; } // Para Google Maps (polyline)
 
-        // No necesarios para ingresar desde Swagger
-        public List<Viaje> Viajes { get; set; }
-        public List<PrecioConfiguracion> Precios { get; set; }
+        // FKs
+        // (Ninguna)
+
+        // Navegadores
+        public List<Viaje>? Viajes { get; set; }
+        public List<PrecioConfiguracion>? PreciosConfiguracion { get; set; }
     }
 }

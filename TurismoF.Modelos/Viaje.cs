@@ -15,14 +15,13 @@ namespace TurismoF.Modelos
         public EstadoViaje Estado { get; set; }
 
         // FKs
-        public int TrenId { get; set; }
         public int RutaId { get; set; }
+        public int TrenId { get; set; }
 
-        // No necesarios para ingresar desde Swagger
-        public Tren Tren { get; set; }
-        public Ruta Ruta { get; set; }
-        public List<AsientosPorViaje> AsientosPorViaje { get; set; }
-        public List<Reserva> Reservas { get; set; }
-        public List<Boleto> Boletos { get; set; }
+        // Navegadores
+        public Ruta? Ruta { get; set; }
+        public Tren? Tren { get; set; }
+        public List<Reserva>? Reservas { get; set; }
+        public List<Boleto>? Boletos { get; set; }
     }
 }
