@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Detalle de Ruta";
-    var googleMapsApiKey = "AIzaSyBhaof5338WZLztmNF004LG-HZG62cDiYk"; // <-- REEMPLAZA por tu clave real
+    var googleMapsApiKey = "AIzaSyBhaof5338WZLztmNF004LG-HZG62cDiYk"; // Reemplaza por tu clave real
 }
 
 <h2>@Model.Nombre</h2>
@@ -10,17 +10,21 @@
 
 <script src="https://maps.googleapis.com/maps/api/js?key=@googleMapsApiKey"></script>
 <script>
-    function initMap() {
-        var origen = { lat: parseFloat('@Model.LatInicio'.replace(',', '.')), lng: parseFloat('@Model.LonInicio'.replace(',', '.')) };
-        var destino = { lat: parseFloat('@Model.LatFin'.replace(',', '.')), lng: parseFloat('@Model.LonFin'.replace(',', '.')) };
+    function parseLatLon(str) {
+        var partes = str.split(',');
+        return {
+            lat: parseFloat(partes[0].trim()),
+            lng: parseFloat(partes[1].trim())
+        };
+    }
 
-        // Si tienes waypoints en tu modelo, usa esta línea:
-        // var waypoints = JSON.parse('Html.Raw(Model.WaypointsJson ?? "[]")');
-        // Si NO tienes waypoints:
-        var waypoints = [];
+    function initMap() {
+        var origen = parseLatLon("@Model.UbicacionInicio");
+        var destino = parseLatLon("@Model.UbicacionFin");
+        var waypoints = []; // Si tienes waypoints, puedes agregarlos aquí
 
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 7,
+            zoom: 10,
             center: origen
         });
 
@@ -43,6 +47,5 @@
             }
         });
     }
-    // Asegura que el mapa se cargue cuando la página termine de cargar
     window.onload = initMap;
 </script>

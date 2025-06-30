@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TurismoF.Data.Data;
@@ -11,9 +12,11 @@ using TurismoF.Data.Data;
 namespace TurismoF.Data.Migrations
 {
     [DbContext(typeof(Context1))]
-    partial class Context1ModelSnapshot : ModelSnapshot
+    [Migration("20250630152827_v6-new-Ruta")]
+    partial class v6newRuta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,15 +224,23 @@ namespace TurismoF.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<double>("LatFin")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("LatInicio")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("LonFin")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("LonInicio")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("UbicacionFin")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UbicacionInicio")
+                    b.Property<string>("colorRuta")
                         .IsRequired()
                         .HasColumnType("text");
 

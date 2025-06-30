@@ -55,9 +55,8 @@ namespace TurismoF.MVC.Controllers
             {
                 nombre = ruta.Nombre,
                 descripcion = ruta.Descripcion,
-                color = ruta.colorRuta,
-                inicio = new { lat = ruta.LatInicio, lng = ruta.LonInicio },
-                fin = new { lat = ruta.LatFin, lng = ruta.LonFin }
+                ubicacionInicio = ruta.UbicacionInicio,
+                ubicacionFin = ruta.UbicacionFin,
             });
 
             return View(ruta);
@@ -74,9 +73,8 @@ namespace TurismoF.MVC.Controllers
                 id = r.Id,
                 nombre = r.Nombre,
                 descripcion = r.Descripcion,
-                color = r.colorRuta,
-                inicio = new { lat = r.LatInicio, lng = r.LonInicio },
-                fin = new { lat = r.LatFin, lng = r.LonFin }
+                ubicacionInicio = r.UbicacionInicio,
+                ubicacionFin = r.UbicacionFin,
             });
             return Json(rutasJson);
         }
@@ -90,7 +88,7 @@ namespace TurismoF.MVC.Controllers
         // POST: Rutas/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,colorRuta,LatInicio,LonInicio,LatFin,LonFin")] Ruta ruta)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,UbicacionInicio,UbicacionFin")] Ruta ruta)
         {
             if(ModelState.IsValid)
             {
@@ -120,7 +118,7 @@ namespace TurismoF.MVC.Controllers
         // POST: Rutas/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,colorRuta,LatInicio,LonInicio,LatFin,LonFin")] Ruta ruta)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,UbicacionInicio,UbicacionFin")] Ruta ruta)
         {
             if(id != ruta.Id)
             {

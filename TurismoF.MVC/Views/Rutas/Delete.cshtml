@@ -11,48 +11,24 @@
     <h4>Ruta</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Descripcion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.colorRuta)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.colorRuta)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LatInicio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LatInicio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LonInicio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LonInicio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LatFin)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LatFin)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LonFin)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LonFin)
-        </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Nombre)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Nombre)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Descripcion)
+            </dd>
+                    <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.UbicacionInicio)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.UbicacionInicio)
+            </dd>
     </dl>
     
     <form asp-action="Delete">

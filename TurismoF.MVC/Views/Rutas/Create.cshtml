@@ -22,30 +22,15 @@
                 <input asp-for="Descripcion" class="form-control" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="colorRuta" class="control-label"></label>
-                <input asp-for="colorRuta" class="form-control" />
-                <span asp-validation-for="colorRuta" class="text-danger"></span>
+             <div class="form-group">
+                <label asp-for="UbicacionInicio" class="control-label"></label>
+                <input asp-for="UbicacionInicio" class="form-control" placeholder="Ej: 0.058458416410756144, -78.30146356349854" />
+                <span asp-validation-for="UbicacionInicio" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LatInicio" class="control-label"></label>
-                <input asp-for="LatInicio" class="form-control" type="number" step="any" min="-90" max="90" placeholder="Ej: 0.220453" />
-                <span asp-validation-for="LatInicio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LonInicio" class="control-label"></label>
-                <input asp-for="LonInicio" class="form-control" type="number" step="any" min="-180" max="180" placeholder="Ej: -78.269764" />
-                <span asp-validation-for="LonInicio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LatFin" class="control-label"></label>
-                <input asp-for="LatFin" class="form-control" type="number" step="any" min="-90" max="90" placeholder="Ej: 0.220453" />
-                <span asp-validation-for="LatFin" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LonFin" class="control-label"></label>
-                <input asp-for="LonFin" class="form-control" type="number" step="any" min="-180" max="180" placeholder="Ej: -78.269764" />
-                <span asp-validation-for="LonFin" class="text-danger"></span>
+                <label asp-for="UbicacionFin" class="control-label"></label>
+                <input asp-for="UbicacionFin" class="form-control" placeholder="Ej: 0.058458416410756144, -78.30146356349854" />
+                <span asp-validation-for="UbicacionFin" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
