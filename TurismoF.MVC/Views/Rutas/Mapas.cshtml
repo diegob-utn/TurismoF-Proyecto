@@ -1,0 +1,48 @@
+﻿@model TurismoF.Modelos.Ruta
+
+@{
+    ViewBag.Title = "Detalle de Ruta";
+    var googleMapsApiKey = "AIzaSyBhaof5338WZLztmNF004LG-HZG62cDiYk"; // <-- REEMPLAZA por tu clave real
+}
+
+<h2>@Model.Nombre</h2>
+<div id="map" style="height: 600px; width: 100%;"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=@googleMapsApiKey"></script>
+<script>
+    function initMap() {
+        var origen = { lat: parseFloat('@Model.LatInicio'.replace(',', '.')), lng: parseFloat('@Model.LonInicio'.replace(',', '.')) };
+        var destino = { lat: parseFloat('@Model.LatFin'.replace(',', '.')), lng: parseFloat('@Model.LonFin'.replace(',', '.')) };
+
+        // Si tienes waypoints en tu modelo, usa esta línea:
+        // var waypoints = JSON.parse('Html.Raw(Model.WaypointsJson ?? "[]")');
+        // Si NO tienes waypoints:
+        var waypoints = [];
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 7,
+            center: origen
+        });
+
+        var directionsService = new google.maps.DirectionsService();
+        var directionsRenderer = new google.maps.DirectionsRenderer();
+        directionsRenderer.setMap(map);
+
+        directionsService.route({
+            origin: origen,
+            destination: destino,
+            waypoints: waypoints.map(function(p) {
+                return { location: { lat: p.lat, lng: p.lng }, stopover: true };
+            }),
+            travelMode: google.maps.TravelMode.DRIVING
+        }, function(response, status) {
+            if (status === 'OK') {
+                directionsRenderer.setDirections(response);
+            } else {
+                alert('No se pudo mostrar la ruta: ' + status);
+            }
+        });
+    }
+    // Asegura que el mapa se cargue cuando la página termine de cargar
+    window.onload = initMap;
+</script>

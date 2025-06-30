@@ -10,6 +10,7 @@ namespace TurismoF.Modelos
 
     public enum CategoriaPasajero
     {
+        SinAsignar = -1, // <-- agregado para boletos "en inventario"
         Niño = 0,
         Adulto = 1,
         TerceraEdad = 2
@@ -55,6 +56,7 @@ namespace TurismoF.Modelos
 
     public enum EstadoBoleto
     {
+        Disponible = -1, // <-- agregado para boletos "en inventario"
         Reservado = 0,
         Emitido = 1,
         Anulado = 2

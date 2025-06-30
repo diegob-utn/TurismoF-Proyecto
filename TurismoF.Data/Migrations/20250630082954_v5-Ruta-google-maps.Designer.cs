@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TurismoF.Data.Data;
@@ -11,9 +12,11 @@ using TurismoF.Data.Data;
 namespace TurismoF.Data.Migrations
 {
     [DbContext(typeof(Context1))]
-    partial class Context1ModelSnapshot : ModelSnapshot
+    [Migration("20250630082954_v5-Ruta-google-maps")]
+    partial class v5Rutagooglemaps
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Reserva.Observer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Reserva.Observer.cs" />
+  </ItemGroup>
+
 </Project>

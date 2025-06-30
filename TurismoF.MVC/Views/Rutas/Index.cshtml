@@ -19,10 +19,19 @@
                 @Html.DisplayNameFor(model => model.Descripcion)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ColorMapa)
+                @Html.DisplayNameFor(model => model.colorRuta)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Coordenadas)
+                @Html.DisplayNameFor(model => model.LatInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LonInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LatFin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LonFin)
             </th>
             <th></th>
         </tr>
@@ -37,10 +46,19 @@
                 @Html.DisplayFor(modelItem => item.Descripcion)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ColorMapa)
+                @Html.DisplayFor(modelItem => item.colorRuta)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Coordenadas)
+                @Html.DisplayFor(modelItem => item.LatInicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LonInicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LatFin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LonFin)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -51,3 +69,4 @@
 }
     </tbody>
 </table>
+

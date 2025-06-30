@@ -7,16 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TurismoF.Data.Data;
 using TurismoF.Modelos;
+using System.Text.Json;
 
 namespace TurismoF.MVC.Controllers
 {
-    public class RutasController : Controller
+    public class RutasController:Controller
     {
         private readonly Context1 _context;
 
         public RutasController(Context1 context)
         {
             _context = context;
+        }
+
+
+        // En RutasController.cs
+        public IActionResult Mapas(int id)
+        {
+            var ruta = _context.Rutas.Find(id);
+            if(ruta == null) return NotFound();
+            return View(ruta);
         }
 
         // GET: Rutas
@@ -28,19 +38,47 @@ namespace TurismoF.MVC.Controllers
         // GET: Rutas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            if(id == null)
             {
                 return NotFound();
             }
 
             var ruta = await _context.Rutas
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (ruta == null)
+            if(ruta == null)
             {
                 return NotFound();
             }
 
+            // Serializa la ruta para que el JS de la vista la use fácilmente
+            ViewBag.RutaJson = JsonSerializer.Serialize(new
+            {
+                nombre = ruta.Nombre,
+                descripcion = ruta.Descripcion,
+                color = ruta.colorRuta,
+                inicio = new { lat = ruta.LatInicio, lng = ruta.LonInicio },
+                fin = new { lat = ruta.LatFin, lng = ruta.LonFin }
+            });
+
             return View(ruta);
+        }
+
+        // GET: Rutas/AllJson
+        // Útil si quieres mostrar todas las rutas en el mapa (Index)
+        [HttpGet]
+        public async Task<IActionResult> AllJson()
+        {
+            var rutas = await _context.Rutas.ToListAsync();
+            var rutasJson = rutas.Select(r => new
+            {
+                id = r.Id,
+                nombre = r.Nombre,
+                descripcion = r.Descripcion,
+                color = r.colorRuta,
+                inicio = new { lat = r.LatInicio, lng = r.LonInicio },
+                fin = new { lat = r.LatFin, lng = r.LonFin }
+            });
+            return Json(rutasJson);
         }
 
         // GET: Rutas/Create
@@ -50,13 +88,11 @@ namespace TurismoF.MVC.Controllers
         }
 
         // POST: Rutas/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,ColorMapa,Coordenadas")] Ruta ruta)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,colorRuta,LatInicio,LonInicio,LatFin,LonFin")] Ruta ruta)
         {
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
                 _context.Add(ruta);
                 await _context.SaveChangesAsync();
@@ -68,13 +104,13 @@ namespace TurismoF.MVC.Controllers
         // GET: Rutas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if(id == null)
             {
                 return NotFound();
             }
 
             var ruta = await _context.Rutas.FindAsync(id);
-            if (ruta == null)
+            if(ruta == null)
             {
                 return NotFound();
             }
@@ -82,27 +118,25 @@ namespace TurismoF.MVC.Controllers
         }
 
         // POST: Rutas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,ColorMapa,Coordenadas")] Ruta ruta)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,colorRuta,LatInicio,LonInicio,LatFin,LonFin")] Ruta ruta)
         {
-            if (id != ruta.Id)
+            if(id != ruta.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
                 try
                 {
                     _context.Update(ruta);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch(DbUpdateConcurrencyException)
                 {
-                    if (!RutaExists(ruta.Id))
+                    if(!RutaExists(ruta.Id))
                     {
                         return NotFound();
                     }
@@ -119,14 +153,14 @@ namespace TurismoF.MVC.Controllers
         // GET: Rutas/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if(id == null)
             {
                 return NotFound();
             }
 
             var ruta = await _context.Rutas
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (ruta == null)
+            if(ruta == null)
             {
                 return NotFound();
             }
@@ -140,7 +174,7 @@ namespace TurismoF.MVC.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var ruta = await _context.Rutas.FindAsync(id);
-            if (ruta != null)
+            if(ruta != null)
             {
                 _context.Rutas.Remove(ruta);
             }
@@ -154,4 +188,5 @@ namespace TurismoF.MVC.Controllers
             return _context.Rutas.Any(e => e.Id == id);
         }
     }
+
 }

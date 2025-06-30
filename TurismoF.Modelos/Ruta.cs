@@ -12,8 +12,11 @@ namespace TurismoF.Modelos
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
-        public string ColorMapa { get; set; }
-        public string Coordenadas { get; set; } // Para Google Maps (polyline)
+        public string colorRuta { get; set; }
+        public double LatInicio { get; set; }
+        public double LonInicio { get; set; }
+        public double LatFin { get; set; }
+        public double LonFin { get; set; }
 
         // FKs
         // (Ninguna)

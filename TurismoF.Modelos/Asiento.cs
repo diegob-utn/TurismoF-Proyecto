@@ -13,8 +13,9 @@ namespace TurismoF.Modelos
         public string Codigo { get; set; } // Ej: "A1"
         public TipoAsiento TipoAsiento { get; set; } // Preferencial/Economico
 
-        // Nueva lógica: Guarda el número del vagón para trazabilidad
-        public int NumeroVagon { get; set; }
+        // Nueva lógica para soporte tipo cine
+        public string Fila { get; set; }    // Letra de la fila, ej: "A", "B", etc.
+        public int Numero { get; set; }     // Número del asiento dentro de la fila, ej: 1, 2, 3...
 
         // FKs
         public int VagonId { get; set; }
