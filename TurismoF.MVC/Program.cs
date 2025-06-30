@@ -1,5 +1,7 @@
+using System.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TurismoF.Data.Data;
 using TurismoF.MVC.Data;
 
 namespace TurismoF.MVC
@@ -10,10 +12,20 @@ namespace TurismoF.MVC
         {
             var builder = WebApplication.CreateBuilder(args);
 
+
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+            var connectionData = builder.Configuration.GetConnectionString("Context");
+
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            builder.Services.AddDbContext<Context1>(options =>
+                options.UseNpgsql(connectionData));
+
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)

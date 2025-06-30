@@ -19,7 +19,7 @@ namespace TurismoF.Modelos
         // public override string PhoneNumber { get; set; }
 
         // Navegadores
-        public List<Reserva>? Reservas { get; set; }
-        public List<Pago>? Pagos { get; set; }
+        public List<Reserva>? Reservas { get; set; } = new();
+        public List<Pago>? Pagos { get; set; } = new();
     }
 }
