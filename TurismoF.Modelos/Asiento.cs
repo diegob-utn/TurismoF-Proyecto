@@ -13,6 +13,8 @@ namespace TurismoF.Modelos
         public string Codigo { get; set; } // Ej: "A1"
         public TipoAsiento TipoAsiento { get; set; } // Preferencial/Economico
 
+        public UbicacionAsiento Ubicacion { get; set; } // Ventana/Pasillo
+
         // Nueva lógica para soporte tipo cine
         public string Fila { get; set; }    // Letra de la fila, ej: "A", "B", etc.
         public int Numero { get; set; }     // Número del asiento dentro de la fila, ej: 1, 2, 3...

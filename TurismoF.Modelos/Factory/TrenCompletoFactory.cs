@@ -7,7 +7,7 @@ namespace TurismoF.Modelos.Factory
     public class TrenCompletoFactory
     {
         /// <summary>
-        /// Crea un tren completo con numeración individual por tipo de asiento (ejemplo: v1, p1...).
+        /// Crea un tren completo con numeración individual por vagon y diferenciando tipo y ubicación de asientos.
         /// </summary>
         public static Tren CrearTrenCompleto(
             string nombre,
@@ -30,63 +30,55 @@ namespace TurismoF.Modelos.Factory
 
             for(int i = 1; i <= cantidadVagones; i++)
             {
-                var tipoVagon = i <= cantidadVagonesPreferenciales
-                    ? TipoVagon.Preferencial
-                    : TipoVagon.Economico;
+                // Asigna tipo de vagón según el índice
+                TipoVagon tipoVagon = i <= cantidadVagonesPreferenciales ? TipoVagon.Preferencial : TipoVagon.Economico;
 
                 var vagon = new Vagon
                 {
                     Numero = i,
                     TipoVagon = tipoVagon,
-                    Tren = tren,
+                    EsPreferencial = tipoVagon == TipoVagon.Preferencial,
                     Asientos = new List<Asiento>()
                 };
 
-                // Contadores por tipo
-                int contadorVentana = 1;
-                int contadorPasillo = 1;
+                int contadorAsientoVagon = 1; // Reinicia en cada vagón
 
                 for(int f = 0; f < filasPorVagon; f++)
                 {
-                    string letraFila = ((char)('A' + f)).ToString();
-
                     for(int n = 1; n <= asientosPorFila; n++)
                     {
-                        // Ejemplo: solo 2 tipos, ventana y pasillo (ajusta si tienes más)
-                        TipoAsiento tipoAsiento;
-                        string codigoAsiento;
+                        // TipoAsiento y UbicacionAsiento son enums distintos
+                        TipoAsiento tipoAsiento = tipoVagon == TipoVagon.Preferencial ? TipoAsiento.Preferencial : TipoAsiento.Economico;
+                        UbicacionAsiento ubicacion;
+
                         string sufijoTipo;
-                        int numeroIndividual;
 
-                        // Puedes definir la lógica de qué número es ventana/pasillo según tu disposición
-                        if(n == 1 || n == asientosPorFila) // Asientos en los extremos = ventana
+                        if(n == 1 || n == asientosPorFila) // extremos = ventana
                         {
-                            tipoAsiento = TipoAsiento.Ventana;
-                            sufijoTipo = "v";
-                            numeroIndividual = contadorVentana++;
+                            ubicacion = UbicacionAsiento.Ventana;
+                            sufijoTipo = "V";
                         }
-                        else // El resto = pasillo
+                        else
                         {
-                            tipoAsiento = TipoAsiento.Pasillo;
-                            sufijoTipo = "p";
-                            numeroIndividual = contadorPasillo++;
+                            ubicacion = UbicacionAsiento.Pasillo;
+                            sufijoTipo = "P";
                         }
 
-                        codigoAsiento = $"{sufijoTipo}{numeroIndividual}";
+                        string codigoAsiento = $"{sufijoTipo}{contadorAsientoVagon++}";
 
                         var asiento = new Asiento
                         {
                             Id = asientoIdSeed++,
                             Codigo = codigoAsiento,
-                            TipoAsiento = tipoAsiento,
-                            Fila = letraFila,
+                            TipoAsiento = tipoAsiento,      // Preferencial/Economico
+                            Ubicacion = ubicacion,          // Ventana/Pasillo
+                            Fila = "",
                             Numero = n,
                             Vagon = vagon,
-                            VagonId = 0, // Setear correctamente al persistir
+                            VagonId = vagon.Numero,
                             Boletos = new List<Boleto>()
                         };
 
-                        // Crear boleto base (sin usuario, solo para inventario)
                         var boleto = new Boleto
                         {
                             Asiento = asiento,
@@ -94,13 +86,13 @@ namespace TurismoF.Modelos.Factory
                             Estado = EstadoBoleto.Disponible,
                             TipoAsiento = asiento.TipoAsiento,
                             Categoria = CategoriaPasajero.SinAsignar
-                            // Otros campos...
                         };
 
                         asiento.Boletos.Add(boleto);
                         vagon.Asientos.Add(asiento);
                     }
                 }
+
                 tren.Vagones.Add(vagon);
             }
 

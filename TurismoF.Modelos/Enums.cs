@@ -61,4 +61,10 @@ namespace TurismoF.Modelos
         Emitido = 1,
         Anulado = 2
     }
+
+    public enum UbicacionAsiento
+    {
+        Ventana,
+        Pasillo
+    }
 }
