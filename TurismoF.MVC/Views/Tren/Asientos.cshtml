@@ -1,0 +1,296 @@
+@model TurismoF.Modelos.Vagon
+@{
+    ViewData["Title"] = "Selección de Asientos";
+    var tren = ViewBag.Tren as TurismoF.Modelos.Tren;
+    var vagonSeleccionado = ViewBag.VagonSeleccionado as TurismoF.Modelos.Vagon;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/asientos.css" />
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Panel de información lateral -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="fas fa-train"></i> Información del Tren</h5>
+                </div>
+                <div class="card-body">
+                    <h6><strong>@tren?.Nombre</strong></h6>
+                    <p class="mb-2">
+                        <strong>Vagón:</strong> @vagonSeleccionado?.Numero<br>
+                        <strong>Tipo:</strong> 
+                        <span class="badge @(vagonSeleccionado?.TipoVagon == TurismoF.Modelos.TipoVagon.Preferencial ? "bg-warning" : "bg-info")">
+                            @vagonSeleccionado?.TipoVagon
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Selector de vagón -->
+            @if (tren?.Vagones?.Any() == true)
+            {
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6>Seleccionar Vagón</h6>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var vagon in tren.Vagones)
+                        {
+                            <a href="@Url.Action("Asientos", new { trenId = tren.Id, vagonId = vagon.Id })" 
+                               class="btn @(vagon.Id == vagonSeleccionado?.Id ? "btn-primary" : "btn-outline-primary") btn-sm mb-2 w-100">
+                                Vagón @vagon.Numero
+                                @if (vagon.TipoVagon == TurismoF.Modelos.TipoVagon.Preferencial)
+                                {
+                                    <i class="fas fa-star text-warning"></i>
+                                }
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Leyenda -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6>Leyenda</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="seat-legend available"></div>
+                        <small class="ms-2">Disponible</small>
+                    </div>
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="seat-legend occupied"></div>
+                        <small class="ms-2">Ocupado</small>
+                    </div>
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="seat-legend selected"></div>
+                        <small class="ms-2">Seleccionado</small>
+                    </div>
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="seat-legend preferential"></div>
+                        <small class="ms-2">Preferencial</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel de selección -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6>Asientos Seleccionados</h6>
+                </div>
+                <div class="card-body">
+                    <div id="selected-seats">
+                        <p class="text-muted">Ningún asiento seleccionado</p>
+                    </div>
+                    <div class="mt-3">
+                        <button id="btn-reserve" class="btn btn-success w-100" disabled>
+                            <i class="fas fa-check"></i> Reservar Asientos
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área de selección de asientos -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-couch"></i> Selección de Asientos - Vagón @vagonSeleccionado?.Numero</h5>
+                    <span class="badge bg-secondary">Tipo Cine</span>
+                </div>
+                <div class="card-body">
+                    <!-- Pantalla/Frente del vagón -->
+                    <div class="screen-area mb-4">
+                        <div class="screen">
+                            <i class="fas fa-tv"></i> FRENTE DEL VAGÓN
+                        </div>
+                    </div>
+
+                    <!-- Grilla de asientos -->
+                    <div id="seat-map" class="seat-map">
+                        <!-- Los asientos se cargarán dinámicamente con JavaScript -->
+                    </div>
+
+                    <!-- Área de carga -->
+                    <div id="loading" class="text-center py-5">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Cargando asientos...</span>
+                        </div>
+                        <p class="mt-2">Cargando disposición de asientos...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript para manejo de asientos -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const vagonId = @vagonSeleccionado?.Id;
+    const seatMap = document.getElementById('seat-map');
+    const loading = document.getElementById('loading');
+    const selectedSeatsDiv = document.getElementById('selected-seats');
+    const reserveBtn = document.getElementById('btn-reserve');
+    
+    let selectedSeats = [];
+    let seatData = [];
+
+    // Cargar datos de asientos
+    loadSeats();
+
+    function loadSeats() {
+        fetch(`/Tren/EstadoAsientos?vagonId=${vagonId}`)
+            .then(response => response.json())
+            .then(data => {
+                seatData = data;
+                renderSeats();
+                loading.style.display = 'none';
+                seatMap.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error loading seats:', error);
+                loading.innerHTML = '<div class="alert alert-danger">Error al cargar los asientos</div>';
+            });
+    }
+
+    function renderSeats() {
+        // Agrupar asientos por fila
+        const seatsByRow = {};
+        seatData.forEach(seat => {
+            if (!seatsByRow[seat.fila]) {
+                seatsByRow[seat.fila] = [];
+            }
+            seatsByRow[seat.fila].push(seat);
+        });
+
+        // Ordenar filas y asientos
+        const sortedRows = Object.keys(seatsByRow).sort();
+        let html = '';
+
+        sortedRows.forEach(row => {
+            const seats = seatsByRow[row].sort((a, b) => a.numero - b.numero);
+            
+            html += `<div class="seat-row">`;
+            html += `<div class="seat-row-label">${row}</div>`;
+            
+            seats.forEach((seat, index) => {
+                // Agregar pasillo en el medio (asumiendo 4 asientos por fila: 2-2)
+                if (index === Math.floor(seats.length / 2)) {
+                    html += `<div class="aisle"></div>`;
+                }
+                
+                const seatClass = getSeatClass(seat);
+                const clickHandler = seat.disponible && !seat.reservado ? `onclick="toggleSeat(${seat.id})"` : '';
+                
+                html += `<div class="seat ${seatClass}" 
+                              data-seat-id="${seat.id}" 
+                              data-seat-code="${seat.codigo}"
+                              data-seat-type="${seat.tipoAsiento}"
+                              ${clickHandler}
+                              title="Asiento ${seat.codigo} - ${seat.tipoAsiento}">
+                            ${seat.numero}
+                        </div>`;
+            });
+            
+            html += `</div>`;
+        });
+
+        seatMap.innerHTML = html;
+    }
+
+    function getSeatClass(seat) {
+        let classes = [];
+        
+        if (seat.disponible && !seat.reservado) {
+            classes.push('available');
+        } else {
+            classes.push('occupied');
+        }
+        
+        if (seat.tipoAsiento === 'Preferencial') {
+            classes.push('preferential');
+        }
+        
+        return classes.join(' ');
+    }
+
+    window.toggleSeat = function(seatId) {
+        const seatElement = document.querySelector(`[data-seat-id="${seatId}"]`);
+        const seatCode = seatElement.getAttribute('data-seat-code');
+        const seatType = seatElement.getAttribute('data-seat-type');
+        
+        if (selectedSeats.includes(seatId)) {
+            // Deseleccionar
+            selectedSeats = selectedSeats.filter(id => id !== seatId);
+            seatElement.classList.remove('selected');
+        } else {
+            // Seleccionar
+            selectedSeats.push(seatId);
+            seatElement.classList.add('selected');
+        }
+        
+        updateSelectedSeatsDisplay();
+    };
+
+    function updateSelectedSeatsDisplay() {
+        if (selectedSeats.length === 0) {
+            selectedSeatsDiv.innerHTML = '<p class="text-muted">Ningún asiento seleccionado</p>';
+            reserveBtn.disabled = true;
+        } else {
+            let html = '<div class="selected-seats-list">';
+            selectedSeats.forEach(seatId => {
+                const seatElement = document.querySelector(`[data-seat-id="${seatId}"]`);
+                const seatCode = seatElement.getAttribute('data-seat-code');
+                const seatType = seatElement.getAttribute('data-seat-type');
+                html += `<div class="mb-1">
+                            <span class="badge bg-primary">${seatCode}</span>
+                            <small class="text-muted">${seatType}</small>
+                        </div>`;
+            });
+            html += '</div>';
+            selectedSeatsDiv.innerHTML = html;
+            reserveBtn.disabled = false;
+        }
+    }
+
+    // Manejar reserva
+    reserveBtn.addEventListener('click', function() {
+        if (selectedSeats.length === 0) return;
+        
+        if (confirm(`¿Confirmar reserva de ${selectedSeats.length} asiento(s)?`)) {
+            reserveBtn.disabled = true;
+            reserveBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Reservando...';
+            
+            fetch('/Tren/ReservarAsientos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(selectedSeats)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Asientos reservados correctamente');
+                    location.reload(); // Recargar para actualizar estado
+                } else {
+                    alert('Error: ' + data.message);
+                    reserveBtn.disabled = false;
+                    reserveBtn.innerHTML = '<i class="fas fa-check"></i> Reservar Asientos';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al reservar asientos');
+                reserveBtn.disabled = false;
+                reserveBtn.innerHTML = '<i class="fas fa-check"></i> Reservar Asientos';
+            });
+        }
+    });
+});
+</script>

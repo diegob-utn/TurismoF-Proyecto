@@ -45,6 +45,9 @@ namespace TurismoF.Modelos.Factory
 
                 for(int f = 0; f < filasPorVagon; f++)
                 {
+                    // Generate row letter for cinema-style layout (A, B, C, etc.)
+                    string filaLetra = Convert.ToChar('A' + f).ToString();
+                    
                     for(int n = 1; n <= asientosPorFila; n++)
                     {
                         // TipoAsiento y UbicacionAsiento son enums distintos
@@ -64,7 +67,8 @@ namespace TurismoF.Modelos.Factory
                             sufijoTipo = "P";
                         }
 
-                        string codigoAsiento = $"{sufijoTipo}{contadorAsientoVagon++}";
+                        // Create seat code with row letter and seat number (e.g., A1, A2, B1, B2)
+                        string codigoAsiento = $"{filaLetra}{n}";
 
                         var asiento = new Asiento
                         {
@@ -72,7 +76,7 @@ namespace TurismoF.Modelos.Factory
                             Codigo = codigoAsiento,
                             TipoAsiento = tipoAsiento,      // Preferencial/Economico
                             Ubicacion = ubicacion,          // Ventana/Pasillo
-                            Fila = "",
+                            Fila = filaLetra,
                             Numero = n,
                             Vagon = vagon,
                             VagonId = vagon.Numero,

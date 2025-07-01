@@ -1,0 +1,50 @@
+@model List<TurismoF.Modelos.Tren>
+@{
+    ViewData["Title"] = "Selección de Trenes";
+}
+
+<div class="container mt-4">
+    <h2>Selección de Trenes Disponibles</h2>
+    <p class="text-muted">Selecciona un tren para ver y reservar asientos</p>
+
+    @if (Model?.Any() == true)
+    {
+        <div class="row">
+            @foreach (var tren in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0">@tren.Nombre</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <strong>Vagones:</strong> @tren.CantidadVagones<br>
+                                <strong>Asientos por vagón:</strong> @tren.CantidadAsientosPorVagon<br>
+                                <strong>Estado:</strong> 
+                                <span class="badge @(tren.Estado == TurismoF.Modelos.EstadoTren.Activo ? "bg-success" : "bg-secondary")">
+                                    @tren.Estado
+                                </span>
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="@Url.Action("Asientos", new { trenId = tren.Id })" class="btn btn-primary w-100">
+                                <i class="fas fa-couch"></i> Seleccionar Asientos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <h4>No hay trenes disponibles</h4>
+            <p>Actualmente no hay trenes activos disponibles para reserva.</p>
+            <a href="@Url.Action("CrearTrenCompleto", "AdminTren")" class="btn btn-outline-primary">
+                Crear Nuevo Tren
+            </a>
+        </div>
+    }
+</div>
