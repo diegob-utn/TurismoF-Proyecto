@@ -23,7 +23,7 @@ namespace TurismoF.MVC
                 options.UseSqlServer(connectionString));
 
             builder.Services.AddDbContext<Context1>(options =>
-                options.UseNpgsql(connectionData));
+                options.UseInMemoryDatabase("TurismoTestDB"));
 
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -33,6 +33,13 @@ namespace TurismoF.MVC
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+
+            // Seed test data for demo
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<Context1>();
+                SeedTestData(context);
+            }
 
             // Configure the HTTP request pipeline.
             if(app.Environment.IsDevelopment())
@@ -59,6 +66,25 @@ namespace TurismoF.MVC
             app.MapRazorPages();
 
             app.Run();
+        }
+
+        private static void SeedTestData(Context1 context)
+        {
+            if (!context.Trenes.Any())
+            {
+                // Create a test train using the factory
+                var tren = TurismoF.Modelos.Factory.TrenCompletoFactory.CrearTrenCompleto(
+                    "Tren Turístico Test",
+                    TurismoF.Modelos.EstadoTren.Activo,
+                    cantidadVagones: 2,
+                    cantidadVagonesPreferenciales: 1,
+                    filasPorVagon: 4,
+                    asientosPorFila: 4
+                );
+
+                context.Trenes.Add(tren);
+                context.SaveChanges();
+            }
         }
     }
 }
