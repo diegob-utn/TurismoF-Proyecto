@@ -1,72 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TurismoF.Modelos;
 
-using System.Collections.Generic;
-
-namespace TurismoF.Modelos.Factory.Boletos;
-
-// Producto base
-public abstract class Boleto
+namespace TurismoF.Modelos.Factory.Boletos
 {
-    public int Id { get; set; }
-    public CategoriaPasajero Categoria { get; set; }
-    public TipoAsiento TipoAsiento { get; set; }
-    public int AsientoId { get; set; }
-    public decimal PrecioFinal { get; set; }
-    public DateTime FechaEmision { get; set; }
-    public EstadoBoleto Estado { get; set; }
-
-    public int ViajeId { get; set; }
-
-    public int ReservaId { get; set; }
-
-}
-
-// Productos concretos
-public class BoletoEstandar:Boleto { }
-public class BoletoPreferencial:Boleto { }
-
-// Factory para decidir el tipo de boleto automáticamente
-public class BoletosFactory
-{
-    public static Boleto CrearBoleto(CategoriaPasajero categoria, Asiento asiento)
+    public static class BoletosFactory
     {
-        if(asiento.TipoAsiento == TipoAsiento.Preferencial)
+        public static Boleto CrearBoleto(CategoriaPasajero categoria, Asiento asiento)
         {
-            return new BoletoPreferencial
-            {
-                Categoria = categoria,
-                TipoAsiento = asiento.TipoAsiento,
-                AsientoId = asiento.Id
-            };
-        }
-        else
-        {
-            return new BoletoEstandar
-            {
-                Categoria = categoria,
-                TipoAsiento = asiento.TipoAsiento,
-                AsientoId = asiento.Id
-            };
-        }
-    }
+            Boleto boleto;
+            if(asiento.TipoAsiento == TipoAsiento.Preferencial)
+                boleto = new BoletoPreferencial();
+            else
+                boleto = new BoletoEstandar();
 
-    // Generación en lote de boletos para todos los asientos de un tren
-    public static List<Boleto> GenerarBoletosParaTren(Modelos.Tren tren, CategoriaPasajero categoria)
-    {
-        var boletos = new List<Boleto>();
-        if(tren.Vagones == null) return boletos;
-        foreach(var vagon in tren.Vagones)
+            boleto.Categoria = categoria;
+            boleto.TipoAsiento = asiento.TipoAsiento;
+            boleto.AsientoId = asiento.Id;
+            boleto.Estado = EstadoBoleto.Disponible;
+            boleto.PrecioFinal = 0;
+            boleto.FechaEmision = DateTime.MinValue;
+            boleto.ReservaId = null;
+            boleto.ViajeId = null;
+            boleto.Asiento = asiento;
+
+            return boleto;
+        }
+
+        public static List<Boleto> GenerarBoletosParaTren(Tren tren, CategoriaPasajero categoria)
         {
-            if(vagon.Asientos == null) continue;
-            foreach(var asiento in vagon.Asientos)
+            var boletos = new List<Boleto>();
+            if(tren.Vagones == null) return boletos;
+            foreach(var vagon in tren.Vagones)
             {
-                boletos.Add(CrearBoleto(categoria, asiento));
+                if(vagon.Asientos == null) continue;
+                foreach(var asiento in vagon.Asientos)
+                {
+                    var boleto = CrearBoleto(categoria, asiento);
+                    boletos.Add(boleto);
+
+                    // Relación inversa
+                    if(asiento.Boletos == null)
+                        asiento.Boletos = new List<Boleto>();
+                    asiento.Boletos.Add(boleto);
+                }
             }
+            return boletos;
         }
-        return boletos;
     }
 }

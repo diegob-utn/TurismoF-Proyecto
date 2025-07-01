@@ -17,8 +17,8 @@ namespace TurismoF.Modelos
         public EstadoBoleto Estado { get; set; }
 
         // FKs
-        public int ReservaId { get; set; }
-        public int ViajeId { get; set; }
+        public int? ReservaId { get; set; }
+        public int? ViajeId { get; set; }
         public int AsientoId { get; set; }
 
         // Navegadores
@@ -26,4 +26,8 @@ namespace TurismoF.Modelos
         public Viaje? Viaje { get; set; }
         public Asiento? Asiento { get; set; }
     }
+
+
+    public class BoletoEstandar:Boleto { }
+    public class BoletoPreferencial:Boleto { }
 }

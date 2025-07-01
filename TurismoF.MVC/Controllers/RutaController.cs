@@ -20,6 +20,12 @@ namespace TurismoF.MVC.Controllers
             _context = context;
         }
 
+        // VIEW: Selección de Ruta y Mapa (NUEVO)
+        public IActionResult SeleccionarRuta()
+        {
+            // Solo retorna la vista (la carga de rutas es vía JS usando AllJson)
+            return View();
+        }
 
         // En RutasController.cs
         public IActionResult Mapas(int id)
@@ -186,5 +192,4 @@ namespace TurismoF.MVC.Controllers
             return _context.Rutas.Any(e => e.Id == id);
         }
     }
-
 }

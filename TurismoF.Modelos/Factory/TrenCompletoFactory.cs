@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System;
-using System.Collections.Generic;
 using TurismoF.Modelos;
 
 namespace TurismoF.Modelos.Factory
@@ -13,15 +7,8 @@ namespace TurismoF.Modelos.Factory
     public class TrenCompletoFactory
     {
         /// <summary>
-        /// Crea un tren completo con vagones diferenciados, asientos numerados tipo cine y boletos para cada asiento.
+        /// Crea un tren completo con numeración individual por tipo de asiento (ejemplo: v1, p1...).
         /// </summary>
-        /// <param name="nombre">Nombre del tren</param>
-        /// <param name="estado">Estado del tren</param>
-        /// <param name="cantidadVagones">Total de vagones</param>
-        /// <param name="cantidadVagonesPreferenciales">Cantidad de vagones preferenciales (el resto serán económicos)</param>
-        /// <param name="filasPorVagon">Cantidad de filas por vagón</param>
-        /// <param name="asientosPorFila">Cantidad de asientos por fila</param>
-        /// <returns>Tren con toda la estructura generada</returns>
         public static Tren CrearTrenCompleto(
             string nombre,
             EstadoTren estado,
@@ -55,16 +42,43 @@ namespace TurismoF.Modelos.Factory
                     Asientos = new List<Asiento>()
                 };
 
+                // Contadores por tipo
+                int contadorVentana = 1;
+                int contadorPasillo = 1;
+
                 for(int f = 0; f < filasPorVagon; f++)
                 {
                     string letraFila = ((char)('A' + f)).ToString();
+
                     for(int n = 1; n <= asientosPorFila; n++)
                     {
+                        // Ejemplo: solo 2 tipos, ventana y pasillo (ajusta si tienes más)
+                        TipoAsiento tipoAsiento;
+                        string codigoAsiento;
+                        string sufijoTipo;
+                        int numeroIndividual;
+
+                        // Puedes definir la lógica de qué número es ventana/pasillo según tu disposición
+                        if(n == 1 || n == asientosPorFila) // Asientos en los extremos = ventana
+                        {
+                            tipoAsiento = TipoAsiento.Ventana;
+                            sufijoTipo = "v";
+                            numeroIndividual = contadorVentana++;
+                        }
+                        else // El resto = pasillo
+                        {
+                            tipoAsiento = TipoAsiento.Pasillo;
+                            sufijoTipo = "p";
+                            numeroIndividual = contadorPasillo++;
+                        }
+
+                        codigoAsiento = $"{sufijoTipo}{numeroIndividual}";
+
                         var asiento = new Asiento
                         {
                             Id = asientoIdSeed++,
-                            Codigo = $"V{i}{letraFila}{n}",
-                            TipoAsiento = tipoVagon == TipoVagon.Preferencial ? TipoAsiento.Preferencial : TipoAsiento.Economico,
+                            Codigo = codigoAsiento,
+                            TipoAsiento = tipoAsiento,
                             Fila = letraFila,
                             Numero = n,
                             Vagon = vagon,
@@ -75,14 +89,14 @@ namespace TurismoF.Modelos.Factory
                         // Crear boleto base (sin usuario, solo para inventario)
                         var boleto = new Boleto
                         {
-                            // Id se asigna por la BD o repositorio
                             Asiento = asiento,
                             AsientoId = asiento.Id,
                             Estado = EstadoBoleto.Disponible,
                             TipoAsiento = asiento.TipoAsiento,
                             Categoria = CategoriaPasajero.SinAsignar
-                            // Se pueden agregar más campos como Viaje, Precio, etc.
+                            // Otros campos...
                         };
+
                         asiento.Boletos.Add(boleto);
                         vagon.Asientos.Add(asiento);
                     }
